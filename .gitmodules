@@ -1,0 +1,6 @@
+[submodule "django-debug-toolbar"]
+	path = django-debug-toolbar
+	url = https://github.com/django-debug-toolbar/django-debug-toolbar.git
+[submodule "apps/django-debug-toolbar"]
+	path = apps/django-debug-toolbar
+	url = https://github.com/django-debug-toolbar/django-debug-toolbar.git
