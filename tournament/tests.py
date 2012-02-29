@@ -62,3 +62,4 @@ class TournamentTest(TestCase):
 
         self.assertEqual(len(user.usermatchresult_set.all()), 1)
 
+
