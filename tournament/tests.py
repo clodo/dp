@@ -29,19 +29,6 @@ class TournamentTest(TestCase):
         current_fixture = Fixture.objects.create(date = datetime.now())
         past_fixture = Fixture.objects.create(date = (datetime.now() - timedelta(weeks = 1)))
 
-        # Matches
-        match = Match.objects.create(local_team = team_a, 
-                                     visitor_team = team_b,
-                                     fixture = current_fixture)
-
-        match = Match.objects.create(local_team = team_c, 
-                                     visitor_team = team_b,
-                                     fixture = past_fixture)
-
-        match = Match.objects.create(local_team = team_c, 
-                                     visitor_team = team_a,
-                                     fixture = past_fixture)
-
         self.assertEqual(Fixture.get_current().id, current_fixture.id)
 
     def test_user_set_fixtures_results(self):
@@ -62,4 +49,29 @@ class TournamentTest(TestCase):
 
         self.assertEqual(len(user.usermatchresult_set.all()), 1)
 
+    def test_get_finished_matches(self):
+        # Teams
+        team_a = Team.objects.create(name = "Team A")
+        team_b = Team.objects.create(name = "Team B")
+        team_c = Team.objects.create(name = "Team C")
+        team_f = Team.objects.create(name = "Team F")
 
+        # Fixtures
+        fixture = Fixture.objects.create(date = datetime.now())
+
+        # Matches
+        match = Match.objects.create(local_team = team_a, 
+                                     visitor_team = team_b,
+                                     fixture = fixture)
+
+        match = Match.objects.create(local_team = team_c, 
+                                     visitor_team = team_f,
+                                     fixture = fixture, 
+                                     finished = True)
+
+        match = Match.objects.create(local_team = team_c, 
+                                     visitor_team = team_a,
+                                     fixture = fixture,
+                                     finished = True)
+
+        self.assertEqual(fixture.get_finished_matches().count(), 2)

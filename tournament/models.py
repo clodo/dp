@@ -29,6 +29,9 @@ class Fixture(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_finished_matches(self):
+        return self.match_set.filter(finished = True)
+
     class Meta:
         ordering = ['-date']
 
@@ -41,8 +44,9 @@ class Match(models.Model):
     local_team = models.ForeignKey(Team, related_name = "local_team", verbose_name = "Equipo Local")
     visitor_team = models.ForeignKey(Team, related_name = "visitor_team", verbose_name = "Equipo Visitante")
     fixture = models.ForeignKey(Fixture)
-    local_team_goals = models.PositiveIntegerField(verbose_name = "Equipo Local Goles")
-    visitor_team_goals = models.PositiveIntegerField(verbose_name = "Equipo Visitante Goles")
+    local_team_goals = models.PositiveIntegerField(verbose_name = "Equipo Local Goles", default = 0)
+    visitor_team_goals = models.PositiveIntegerField(verbose_name = "Equipo Visitante Goles", default = 0)
+    finished = models.BooleanField(verbose_name = "Terminado", default = False)
 
     def __unicode__(self):
         return "%s - %s | %s vs %s " % (self.fixture.date, self.fixture.name, self.local_team.name, self.visitor_team.name)
