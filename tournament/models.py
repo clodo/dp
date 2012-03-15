@@ -12,10 +12,15 @@ class User(models.Model):
                                        match = match, 
                                        local_goals = local_goals, 
                                        visitor_goals = visitor_goals)
-    def get_finished_matches(self):
-        return [usermatchresult.match 
-                for usermatchresult in self.usermatchresult_set.all() 
-                if usermatchresult.match.finished]
+
+    def get_predictions_of_finished_matchs(self):
+        return [user_prediction for user_prediction in self.usermatchresult_set.all() 
+                if user_prediction.match.finished]
+    
+    def get_good_predictions(self):
+        return [prediction for prediction in self.get_predictions_of_finished_matchs() 
+                if prediction.match.local_team_goals == prediction.local_goals and
+                    prediction.match.visitor_team_goals == prediction.visitor_goals]
         
 
 class Team(models.Model):
@@ -34,7 +39,7 @@ class Fixture(models.Model):
     def __unicode__(self):
         return self.name
 
-    def get_finished_matches(self):
+    def get_finished_matchs(self):
         return self.match_set.filter(finished = True)
 
     class Meta:
