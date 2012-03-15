@@ -12,6 +12,11 @@ class User(models.Model):
                                        match = match, 
                                        local_goals = local_goals, 
                                        visitor_goals = visitor_goals)
+    def get_finished_matches(self):
+        return [usermatchresult.match 
+                for usermatchresult in self.usermatchresult_set.all() 
+                if usermatchresult.match.finished]
+        
 
 class Team(models.Model):
     name = models.CharField(max_length = 50)
