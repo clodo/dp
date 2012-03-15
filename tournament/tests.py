@@ -47,7 +47,7 @@ class TournamentTest(TestCase):
         user = User.objects.create(name = "User")
         user.set_match_result(match, 0, 0)
 
-        self.assertEqual(len(user.usermatchresult_set.all()), 1)
+        self.assertEqual(len(user.usermatchprediction_set.all()), 1)
 
     def test_get_fixture_finished_matchs(self):
         # Teams
@@ -107,7 +107,7 @@ class TournamentTest(TestCase):
 
         self.assertEqual(len(user.get_predictions_of_finished_matchs()), 1)
 
-    def test_assert_user_predictions_with_real_scores(self):
+    def test_compare_user_predictions_with_finished_matchs(self):
         # Teams
         team_a = Team.objects.create(name = "Team A")
         team_b = Team.objects.create(name = "Team B")
@@ -146,3 +146,4 @@ class TournamentTest(TestCase):
         user.set_match_result(match_2, 0, 0)
 
         self.assertEqual(len(user.get_good_predictions()), 2)
+        self.assertEqual(user.get_points(), 4)

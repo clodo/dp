@@ -7,20 +7,23 @@ class User(models.Model):
     def __unicode__(self):
         return self.name
 
-    def set_match_result(self, match, local_goals, visitor_goals):
-        UserMatchResult.objects.create(user = self,
+    def set_match_result(self, match, local_team_goals, visitor_team_goals):
+        UserMatchPrediction.objects.create(user = self,
                                        match = match, 
-                                       local_goals = local_goals, 
-                                       visitor_goals = visitor_goals)
+                                       local_team_goals = local_team_goals, 
+                                       visitor_team_goals = visitor_team_goals)
 
     def get_predictions_of_finished_matchs(self):
-        return [user_prediction for user_prediction in self.usermatchresult_set.all() 
+        return [user_prediction for user_prediction in self.usermatchprediction_set.all() 
                 if user_prediction.match.finished]
     
     def get_good_predictions(self):
         return [prediction for prediction in self.get_predictions_of_finished_matchs() 
-                if prediction.match.local_team_goals == prediction.local_goals and
-                    prediction.match.visitor_team_goals == prediction.visitor_goals]
+                if prediction.match.local_team_goals == prediction.local_team_goals and
+                   prediction.match.visitor_team_goals == prediction.visitor_team_goals]
+
+    def get_points(self):
+        return len(self.get_good_predictions()) * 2
         
 
 class Team(models.Model):
@@ -64,9 +67,9 @@ class Match(models.Model):
     class Meta:
         verbose_name = "Partido"
 
-class UserMatchResult(models.Model):
+class UserMatchPrediction(models.Model):
     user = models.ForeignKey(User)
     match = models.ForeignKey(Match)
-    local_goals = models.PositiveIntegerField()
-    visitor_goals = models.PositiveIntegerField()
+    local_team_goals = models.PositiveIntegerField()
+    visitor_team_goals = models.PositiveIntegerField()
 
