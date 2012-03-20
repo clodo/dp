@@ -17,13 +17,13 @@ class User(models.Model):
         return [user_prediction for user_prediction in self.usermatchprediction_set.all() 
                 if user_prediction.match.finished]
     
-    def get_good_predictions(self):
+    def get_good_exact_predictions(self):
         return [prediction for prediction in self.get_predictions_of_finished_matchs() 
                 if prediction.match.local_team_goals == prediction.local_team_goals and
                    prediction.match.visitor_team_goals == prediction.visitor_team_goals]
 
     def get_points(self):
-        return len(self.get_good_predictions()) * 2
+        return len(self.get_good_exact_predictions()) * 2
         
 
 class Team(models.Model):
@@ -72,4 +72,18 @@ class UserMatchPrediction(models.Model):
     match = models.ForeignKey(Match)
     local_team_goals = models.PositiveIntegerField()
     visitor_team_goals = models.PositiveIntegerField()
+
+    def is_a_moral_prediction(self):
+        prediction_local_team_had_won = self.__class__.has_local_team_won(self.local_team_goals, self.visitor_team_goals)
+        match_local_team_had_won = self.__class__.has_local_team_won(self.match.local_team_goals, self.match.visitor_team_goals)
+
+        return prediction_local_team_had_won == match_local_team_had_won
+
+    @classmethod
+    def has_local_team_won(cls, local_team_goals, visitor_team_goals):
+        return None if visitor_team_goals == local_team_goals else (visitor_team_goals < local_team_goals)
+
+
+
+
 
