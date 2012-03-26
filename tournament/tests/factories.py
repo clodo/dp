@@ -16,6 +16,7 @@ class MatchFactory(factory.Factory):
     finished = False
     local_team_goals = randrange(0, 5)
     visitor_team_goals = randrange(0, 5)
+    is_classic = False
 
 class UserFactory(factory.Factory):
     name = factory.Sequence(lambda n: 'Name {0}'.format(n))
@@ -25,5 +26,6 @@ class UserMatchPredictionFactory(factory.Factory):
     match = factory.LazyAttribute(lambda a: MatchFactory())
     local_team_goals = randrange(0, 5)
     visitor_team_goals = randrange(0, 5)
+    is_double = False
 
 

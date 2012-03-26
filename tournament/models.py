@@ -13,17 +13,9 @@ class User(models.Model):
                                        local_team_goals = local_team_goals, 
                                        visitor_team_goals = visitor_team_goals)
 
-    def get_predictions_of_finished_matchs(self):
-        return [user_prediction for user_prediction in self.usermatchprediction_set.all() 
-                if user_prediction.match.finished]
-    
-    def get_good_exact_predictions(self):
-        return [prediction for prediction in self.get_predictions_of_finished_matchs() 
-                if prediction.match.local_team_goals == prediction.local_team_goals and
-                   prediction.match.visitor_team_goals == prediction.visitor_team_goals]
-
     def get_points(self):
-        return len(self.get_good_exact_predictions()) * 2
+        return sum([user_prediction.get_points() for user_prediction in self.usermatchprediction_set.all() 
+                    if user_prediction.match.finished])
         
 
 class Team(models.Model):
@@ -60,6 +52,7 @@ class Match(models.Model):
     local_team_goals = models.PositiveIntegerField(verbose_name = "Equipo Local Goles", default = 0)
     visitor_team_goals = models.PositiveIntegerField(verbose_name = "Equipo Visitante Goles", default = 0)
     finished = models.BooleanField(verbose_name = "Terminado", default = False)
+    is_classic = models.BooleanField(verbose_name = "Clasico", default = False)
 
     def __unicode__(self):
         return "%s - %s | %s vs %s " % (self.fixture.date, self.fixture.name, self.local_team.name, self.visitor_team.name)
@@ -72,6 +65,7 @@ class UserMatchPrediction(models.Model):
     match = models.ForeignKey(Match)
     local_team_goals = models.PositiveIntegerField()
     visitor_team_goals = models.PositiveIntegerField()
+    is_double = models.BooleanField(verbose_name = "Doble", default = False)
 
     def is_a_moral_prediction(self):
         prediction_local_team_had_won = self.__class__.has_local_team_won(self.local_team_goals, self.visitor_team_goals)
@@ -82,6 +76,22 @@ class UserMatchPrediction(models.Model):
     def is_a_exact_prediction(self):
         return self.match.local_team_goals == self.local_team_goals and  \
                self.match.visitor_team_goals == self.visitor_team_goals
+
+    def get_points(self):
+        points = 0
+        if self.is_a_exact_prediction():
+            points = 3
+        elif self.is_a_moral_prediction():
+            points = 1
+
+        if self.match.is_classic:
+            points *= 2
+
+        if self.is_double:
+            points *= 2
+
+        return points
+
 
     @classmethod
     def has_local_team_won(cls, local_team_goals, visitor_team_goals):
