@@ -62,34 +62,23 @@ class TournamentTest(TestCase):
 
         self.assertEqual(len(user.get_predictions_of_finished_matchs()), 1)
 
-    def test_the_user_exact_predictions(self):
-        # Fixtures
-        fixture = FixtureFactory()
-
+    def test_users_exact_predictions(self):
         # Matchs
-        match = MatchFactory(fixture = fixture,
-                             finished = True, 
-                             visitor_team_goals = 0, 
-                             local_team_goals = 2)
+        match_1 = MatchFactory()
+        match_2 = MatchFactory()
 
-        match_1 = MatchFactory(fixture = fixture, 
-                               finished = True,
-                               visitor_team_goals = 0,
-                               local_team_goals = 2)
-  
-        match_2 = MatchFactory(fixture = fixture, 
-                               finished = True,
-                               visitor_team_goals = 0,
-                               local_team_goals = 0)
-  
-        # User
-        user = UserFactory()
-        user.set_match_result(match, 2, 0)
-        user.set_match_result(match_1, 1, 0)
-        user.set_match_result(match_2, 0, 0)
+        # Predictions
+        prediction_match_1_true = UserMatchPredictionFactory(visitor_team_goals = match_1.visitor_team_goals, 
+                                                        local_team_goals = match_1.local_team_goals, 
+                                                        match = match_1)
 
-        self.assertEqual(len(user.get_good_exact_predictions()), 2)
-        self.assertEqual(user.get_points(), 4)
+        prediction_match_2_false = UserMatchPredictionFactory(visitor_team_goals = (match_2.visitor_team_goals + 1), 
+                                                        local_team_goals = match_2.local_team_goals, 
+                                                        match = match_2)
+
+
+        self.assertTrue(prediction_match_1_true.is_a_exact_prediction())
+        self.assertFalse(prediction_match_2_false.is_a_exact_prediction())
 
     def test_users_moral_predictions(self):
         # Match 1 - is moral prediction

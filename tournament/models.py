@@ -79,6 +79,10 @@ class UserMatchPrediction(models.Model):
 
         return prediction_local_team_had_won == match_local_team_had_won
 
+    def is_a_exact_prediction(self):
+        return self.match.local_team_goals == self.local_team_goals and  \
+               self.match.visitor_team_goals == self.visitor_team_goals
+
     @classmethod
     def has_local_team_won(cls, local_team_goals, visitor_team_goals):
         return None if visitor_team_goals == local_team_goals else (visitor_team_goals < local_team_goals)
