@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from django.conf import settings
 
 class User(models.Model):
     name = models.CharField(max_length = 50)
@@ -80,15 +81,15 @@ class UserMatchPrediction(models.Model):
     def get_points(self):
         points = 0
         if self.is_a_exact_prediction():
-            points = 3
+            points = settings.POINTS['exact']
         elif self.is_a_moral_prediction():
-            points = 1
+            points = settings.POINTS['moral']
 
         if self.match.is_classic:
-            points *= 2
+            points *= settings.POINTS['classic']
 
         if self.is_double:
-            points *= 2
+            points *= settings.POINTS['double']
 
         return points
 
@@ -96,8 +97,5 @@ class UserMatchPrediction(models.Model):
     @classmethod
     def has_local_team_won(cls, local_team_goals, visitor_team_goals):
         return None if visitor_team_goals == local_team_goals else (visitor_team_goals < local_team_goals)
-
-
-
 
 

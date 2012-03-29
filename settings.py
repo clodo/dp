@@ -165,5 +165,11 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
 }
 
+POINTS = {
+    'exact': 3,
+    'moral': 1,
+    'classic': 2,
+    'double': 2,
+}
 
 
