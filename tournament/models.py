@@ -29,8 +29,9 @@ class Team(models.Model):
         verbose_name = "Equipo"
 
 class Fixture(models.Model):
-    date = models.DateField(verbose_name = "Fecha")
-    name = models.CharField(max_length = 50, default = str(datetime.now().date()))
+    name = models.CharField(max_length = 50, default = str(datetime.now().date()), verbose_name = "Fecha Nombre")
+    number = models.PositiveIntegerField(verbose_name = "Fecha numero")
+    is_finished = models.BooleanField(default = False, verbose_name = "Termino")
 
     def __unicode__(self):
         return self.name
@@ -39,14 +40,12 @@ class Fixture(models.Model):
         return self.match_set.filter(finished = True)
 
     class Meta:
-        ordering = ['-date']
-
-    @staticmethod
-    def get_current():
-        return Fixture.objects.all()[0]
+        ordering = ['-number']
+        verbose_name = "Fecha"
 
 
 class Match(models.Model):
+    date = models.DateField(verbose_name = "Fecha", default = datetime.now().date())
     local_team = models.ForeignKey(Team, related_name = "local_team", verbose_name = "Equipo Local")
     visitor_team = models.ForeignKey(Team, related_name = "visitor_team", verbose_name = "Equipo Visitante")
     fixture = models.ForeignKey(Fixture)

@@ -7,9 +7,12 @@ class TeamFactory(factory.Factory):
     name = factory.Sequence(lambda n: 'Team {0}'.format(n))
 
 class FixtureFactory(factory.Factory):
-    date = datetime.now()
+    is_finished = False
+    name = factory.Sequence(lambda n: 'Fecha {0}'.format(n))
+    number = randrange(0, 20)
 
 class MatchFactory(factory.Factory):
+    date = datetime.now()
     local_team = factory.LazyAttribute(lambda a: TeamFactory())
     visitor_team = factory.LazyAttribute(lambda a: TeamFactory())
     fixture = factory.LazyAttribute(lambda a: FixtureFactory())

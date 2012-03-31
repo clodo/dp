@@ -4,29 +4,9 @@ from tournament.models import Team, Fixture, Match, User
 from tournament.tests.factories import *
 
 class TournamentTest(TestCase):
-
-    def test_setting_current_fixture(self):
-        # Fixtures
-        fixture = FixtureFactory()
-
-        # Matchs
-        match = MatchFactory(fixture = fixture)
-
-        self.assertEqual(len(fixture.match_set.all()), 1)
-
-    def test_gettting_the_current_fixture(self):
-        # Fixtures
-        current_fixture = FixtureFactory()
-        past_fixture = FixtureFactory(date = (datetime.now() - timedelta(weeks = 1)))
-
-        self.assertEqual(Fixture.get_current().id, current_fixture.id)
-
     def test_the_user_setting_fixtures_results(self):
-        # Fixtures
-        fixture = FixtureFactory()
-
         # Matchs
-        match = MatchFactory(fixture = fixture)
+        match = MatchFactory()
 
         # User
         user = UserFactory()
