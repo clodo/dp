@@ -299,3 +299,4 @@ class TournamentTest(TestCase):
         self.assertTrue(match_prediction.is_a_moral_prediction())
         self.assertEqual(4, user.get_points())
 
+
