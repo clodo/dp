@@ -5,6 +5,13 @@
     <title>{% block page_title %}{% endblock %}</title>
 
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap.css">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+    </style>
+
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap-responsive.css">
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/site.css">
 
@@ -36,12 +43,9 @@
     </div>
 
     <div class="container">
-
-        <!-- Main hero unit for a primary marketing message or call to action -->
         <div class="current_fixture">
+            <h3 class="current_fixture_title"> Fecha Actual - Numero 1</h3>
             <form>
-                <fieldset>
-                    <legend>Fecha Actual - Numero 1</legend>
                     <div class="match form-inline">
                         <select class="span1" name="e1">
                             <option value="0">0</option>
@@ -76,7 +80,6 @@
                             <option value="0">0</option>
                         </select>
                     </div>
-                </fieldset>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
