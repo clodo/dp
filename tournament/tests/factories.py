@@ -8,7 +8,6 @@ class TeamFactory(factory.Factory):
 
 class FixtureFactory(factory.Factory):
     is_finished = False
-    name = factory.Sequence(lambda n: 'Fecha {0}'.format(n))
     number = randrange(0, 20)
 
 class MatchFactory(factory.Factory):

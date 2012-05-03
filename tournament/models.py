@@ -20,7 +20,8 @@ class User(models.Model):
         
 
 class Team(models.Model):
-    name = models.CharField(max_length = 50)
+    name = models.CharField(max_length = 50, verbose_name = "Nombre")
+    crest = models.ImageField(upload_to = "crests", verbose_name = "Escudo", null = True)
 
     def __unicode__(self):
         return self.name
@@ -29,7 +30,6 @@ class Team(models.Model):
         verbose_name = "Equipo"
 
 class Fixture(models.Model):
-    name = models.CharField(max_length = 50, default = str(datetime.now().date()), verbose_name = "Fecha Nombre")
     number = models.PositiveIntegerField(verbose_name = "Fecha numero")
     is_finished = models.BooleanField(default = False, verbose_name = "Termino")
 
@@ -55,7 +55,7 @@ class Match(models.Model):
     is_classic = models.BooleanField(verbose_name = "Clasico", default = False)
 
     def __unicode__(self):
-        return "%s - %s | %s vs %s " % (self.fixture.date, self.fixture.name, self.local_team.name, self.visitor_team.name)
+        return "Fecha %s : %s vs %s " % (self.fixture.number, self.local_team.name, self.visitor_team.name)
 
     class Meta:
         verbose_name = "Partido"
